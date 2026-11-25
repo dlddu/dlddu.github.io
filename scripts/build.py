@@ -190,7 +190,7 @@ def link_row(label, url, cls):
     text = norm(url).removeprefix("github.com/")
     return (
         f'<a class="link {cls}" href="{e(url)}"><span class="kind">{label}</span>'
-        f'<span class="host">{e(text)}</span></a>'
+        f'<span class="host" title="{e(url)}">{e(text)}</span></a>'
     )
 
 
