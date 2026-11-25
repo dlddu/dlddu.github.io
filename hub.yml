@@ -13,10 +13,34 @@
 # repos: Pages 가 없어도 자주 쓰는 레포. 레포 이름만 적어도 된다.
 #   - infrastructure
 
-services: []
+# 주소 출처: flux-cd-apps 의 IngressRoute (PUBLIC_DOMAIN = llkm.nl).
+# 루트(/)가 404인 API 전용 서비스(pocket-aide, dear-baby)와 내부망(mklm.nl)은 넣지 않았다.
+services:
+  - name: session-platform
+    url: https://session-platform.llkm.nl
+    repo: session-platform
+  - name: feature-doc
+    url: https://feature-doc.llkm.nl
+    repo: feature-doc
+  - name: econ-monitor
+    url: https://econ-monitor.llkm.nl
+    repo: economic-opinion-trend-monitor
+  - name: drop
+    url: https://drop.llkm.nl
+    repo: drop
+  - name: meal-appointment
+    url: https://meal-appointment.llkm.nl
+    repo: meal-appointment-v2
+  - name: homelab-k3s-mcp
+    url: https://homelab-k3s-mcp.llkm.nl
+    repo: homelab-k3s-mcp
+    description: MCP 엔드포인트
 
 pages:
   - repo: plugin-marketplace
     private: true
 
-repos: []
+repos:
+  - infrastructure
+  - flux-cd
+  - flux-cd-apps
