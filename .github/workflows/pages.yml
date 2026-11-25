@@ -1,0 +1,47 @@
+name: Build hub page
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 21 * * *" # 매일 06:17 KST
+  workflow_dispatch:
+  repository_dispatch:
+    types: [refresh-hub] # 다른 레포에서 즉시 갱신할 때
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Generate page
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPO_LIST_TOKEN: ${{ secrets.REPO_LIST_TOKEN }}
+        run: python3 scripts/build.py
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

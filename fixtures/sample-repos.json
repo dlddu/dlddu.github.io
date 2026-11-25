@@ -1,0 +1,9 @@
+[
+  {"name": "dlddu.github.io", "full_name": "dlddu/dlddu.github.io", "html_url": "https://github.com/dlddu/dlddu.github.io", "has_pages": true, "homepage": "", "private": false, "archived": false, "fork": false, "topics": [], "description": "this hub"},
+  {"name": "feature-doc", "full_name": "dlddu/feature-doc", "html_url": "https://github.com/dlddu/feature-doc", "has_pages": true, "pages_url_resolved": "https://dlddu.github.io/feature-doc/", "homepage": "https://feature-doc.example.com", "private": false, "archived": false, "fork": false, "topics": [], "description": "기능 문서 서비스"},
+  {"name": "docs-only", "full_name": "dlddu/docs-only", "html_url": "https://github.com/dlddu/docs-only", "has_pages": true, "pages_url_resolved": "https://dlddu.github.io/docs-only/", "homepage": "https://dlddu.github.io/docs-only", "private": true, "archived": false, "fork": false, "topics": [], "description": "Website 칸에 Pages 주소를 적은 경우 — 서비스로 중복 집계되지 않아야 함"},
+  {"name": "api-server", "full_name": "dlddu/api-server", "html_url": "https://github.com/dlddu/api-server", "has_pages": false, "homepage": "api.example.com", "private": true, "archived": false, "fork": false, "topics": [], "description": null},
+  {"name": "secret-svc", "full_name": "dlddu/secret-svc", "html_url": "https://github.com/dlddu/secret-svc", "has_pages": false, "homepage": "https://secret.example.com", "private": true, "archived": false, "fork": false, "topics": ["hub-hide"], "description": "숨김"},
+  {"name": "old-thing", "full_name": "dlddu/old-thing", "html_url": "https://github.com/dlddu/old-thing", "has_pages": true, "homepage": "https://old.example.com", "private": false, "archived": true, "fork": false, "topics": [], "description": "archived"},
+  {"name": "forked", "full_name": "dlddu/forked", "html_url": "https://github.com/dlddu/forked", "has_pages": true, "homepage": "https://fork.example.com", "private": false, "archived": false, "fork": true, "topics": [], "description": "fork"}
+]

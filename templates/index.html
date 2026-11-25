@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{OWNER}} · 서비스 목록</title>
+  <style>
+    :root {
+      --bg: #f7f7f5; --surface: #ffffff; --text: #1d1d1b; --muted: #6b6b66;
+      --line: #e4e4df; --accent: #2f5bd3; --badge: #efeee9;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #141413; --surface: #1d1d1b; --text: #ececea; --muted: #9a9a94;
+        --line: #2e2e2b; --accent: #8aa8ff; --badge: #2a2a27;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--text);
+      font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo",
+            "Noto Sans KR", "Segoe UI", sans-serif;
+    }
+    main { max-width: 960px; margin: 0 auto; padding: 48px 20px 64px; }
+    header h1 { margin: 0 0 4px; font-size: 28px; letter-spacing: -0.02em; }
+    header p { margin: 0; color: var(--muted); }
+    section { margin-top: 40px; }
+    h2 { font-size: 18px; margin: 0 0 14px; display: flex; align-items: center; gap: 8px; }
+    .count {
+      font-size: 13px; font-weight: 500; color: var(--muted);
+      background: var(--badge); border-radius: 999px; padding: 1px 9px;
+    }
+    .grid {
+      list-style: none; margin: 0; padding: 0; display: grid; gap: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    }
+    .card {
+      background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+      padding: 16px; display: flex; flex-direction: column; gap: 6px;
+    }
+    .card:hover { border-color: var(--accent); }
+    .main { text-decoration: none; color: inherit; display: flex; flex-direction: column; }
+    .name { font-weight: 600; display: flex; align-items: center; gap: 6px; }
+    .host { font-size: 13px; color: var(--accent); word-break: break-all; }
+    .desc { margin: 0; font-size: 14px; color: var(--muted); }
+    .repo { margin-top: auto; padding-top: 4px; font-size: 13px; color: var(--muted); text-decoration: none; }
+    .repo:hover { color: var(--accent); }
+    .badge {
+      font-size: 11px; font-weight: 500; color: var(--muted);
+      background: var(--badge); border-radius: 4px; padding: 0 6px;
+    }
+    .empty { color: var(--muted); font-size: 14px; padding: 8px 0; }
+    footer { margin-top: 48px; font-size: 13px; color: var(--muted); }
+    footer a { color: inherit; }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>{{OWNER}}</h1>
+    <p>운영 중인 서비스와 각 레포의 GitHub Pages 모음</p>
+  </header>
+{{SECTIONS}}
+  <footer>
+    마지막 갱신 {{UPDATED}} · {{NOTE}} ·
+    <a href="data.json">data.json</a> ·
+    <a href="https://github.com/{{OWNER}}/{{OWNER}}.github.io">source</a>
+  </footer>
+</main>
+</body>
+</html>
