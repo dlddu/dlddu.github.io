@@ -1,0 +1,22 @@
+# 허브 페이지 수동 목록. 자동 수집(GitHub API)에 더해지고, 같은 이름이면 여기 값이 우선한다.
+#
+# services: 운영 중인 서비스. url 필수.
+#   - name: my-service
+#     url: https://my-service.dlddu.dev
+#     repo: my-service          # 선택. 적으면 "GitHub 레포 →" 링크와 설명이 붙는다
+#     description: 한 줄 설명    # 선택. 없으면 레포 About 설명
+#
+# pages: GitHub Pages. private 레포처럼 자동 수집에 안 잡히는 것.
+#   - repo: some-private-repo   # url 을 안 적으면 https://dlddu.dev/<repo>/
+#     private: true
+#
+# repos: Pages 가 없어도 자주 쓰는 레포. 레포 이름만 적어도 된다.
+#   - infrastructure
+
+services: []
+
+pages:
+  - repo: plugin-marketplace
+    private: true
+
+repos: []

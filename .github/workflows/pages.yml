@@ -26,10 +26,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - run: pip install pyyaml
       - name: Generate page
         env:
           GITHUB_TOKEN: ${{ github.token }}
           REPO_LIST_TOKEN: ${{ secrets.REPO_LIST_TOKEN }}
+          HUB_PAGES_BASE: https://dlddu.dev
         run: python3 scripts/build.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

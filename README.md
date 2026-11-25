@@ -5,13 +5,15 @@
 
 ## 목록에 올리는 방법
 
-| 목록 | 레포에서 할 일 |
-| --- | --- |
-| 운영 중인 서비스 | 레포 About(⚙️) → **Website** 칸에 서비스 주소 입력 |
-| GitHub Pages | 레포 Settings → Pages 켜기 |
-| 숨기기 | 레포에 topic `hub-hide` 추가 |
+| 목록 | 자동 (레포에서) | 수동 (`hub.yml`) |
+| --- | --- | --- |
+| 운영 중인 서비스 | 레포 About(⚙️) → **Website** 칸에 서비스 주소 | `services` 에 `name`·`url` |
+| GitHub Pages | 레포 Settings → Pages 켜기 (public 레포) | `pages` 에 `repo` (private 레포 등) |
+| 자주 쓰는 레포 | — | `repos` 에 레포 이름 |
+| 숨기기 | 레포에 topic `hub-hide` | 목록에서 빼기 |
 
 archived 레포와 fork는 자동으로 빠집니다. Website 칸에 그 레포의 Pages 주소를 적은 경우는 서비스로 중복 집계하지 않습니다.
+자동 수집과 `hub.yml` 에 같은 이름이 있으면 `hub.yml` 값이 우선합니다. 형식은 `hub.yml` 맨 위 주석을 보세요.
 
 ## 갱신 시점
 
@@ -31,6 +33,7 @@ fine-grained PAT(Repository access: All repositories, 권한: Metadata read + Pa
 ## 로컬 미리보기
 
 ```bash
+pip install pyyaml
 python3 scripts/build.py --from-json fixtures/sample-repos.json
 open _site/index.html
 ```
