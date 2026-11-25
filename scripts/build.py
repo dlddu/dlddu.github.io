@@ -91,6 +91,7 @@ def collect(repos, token):
             continue
         base = {
             "name": r["name"],
+            "repo": r["name"],
             "description": r.get("description") or "",
             "repo_url": r["html_url"],
             "private": bool(r.get("private")),
@@ -137,6 +138,7 @@ def manual_item(entry, kind, by_name):
         url = entry["url"]
     return {
         "name": name,
+        "repo": repo,
         "description": entry.get("description") or known.get("description") or "",
         "repo_url": repo_url,
         "private": bool(entry.get("private", known.get("private", False))),
@@ -150,50 +152,82 @@ def merge(auto, manual):
     return [a for a in auto if a["name"] not in names] + manual
 
 
-def card(item, show_repo=True):
+def group_by_repo(services, pages, repos):
+    """같은 레포의 서비스·Pages·레포 링크를 카드 하나로 묶는다."""
+    groups = {}
+
+    def slot(item):
+        key = item["repo"] or f"service:{item['name']}"
+        g = groups.setdefault(
+            key,
+            {"title": None, "repo": item["repo"], "repo_url": "", "description": "",
+             "private": False, "services": [], "pages": []},
+        )
+        g["repo_url"] = g["repo_url"] or item["repo_url"]
+        g["description"] = g["description"] or item["description"]
+        g["private"] = g["private"] or item["private"]
+        return g
+
+    for s in services:
+        g = slot(s)
+        g["services"].append(s["url"])
+        # 서비스 이름(econ-monitor 등)이 레포 이름보다 알아보기 쉬우니 제목으로 쓴다.
+        g["title"] = g["title"] or s["name"]
+    for p in pages:
+        slot(p)["pages"].append(p["url"])
+    for r in repos:
+        slot(r)
+    for g in groups.values():
+        g["title"] = g["title"] or g["repo"]
+
+    # 서비스가 있는 것 → Pages 만 있는 것 → 레포만 있는 것, 각각 이름순.
+    rank = lambda g: (0 if g["services"] else 1 if g["pages"] else 2, g["title"].lower())
+    return sorted(groups.values(), key=rank)
+
+
+def link_row(label, url, cls):
     e = html.escape
-    host = norm(item["url"])
-    badge = '<span class="badge">private</span>' if item["private"] else ""
-    desc = f'<p class="desc">{e(item["description"])}</p>' if item["description"] else ""
-    repo = (
-        f'<a class="repo" href="{e(item["repo_url"])}">GitHub 레포 →</a>'
-        if show_repo and item["repo_url"]
+    text = norm(url).removeprefix("github.com/")
+    return (
+        f'<a class="link {cls}" href="{e(url)}"><span class="kind">{label}</span>'
+        f'<span class="host">{e(text)}</span></a>'
+    )
+
+
+def card(g):
+    e = html.escape
+    badge = '<span class="badge">private</span>' if g["private"] else ""
+    sub = (
+        f'<span class="sub">{e(g["repo"])}</span>'
+        if g["repo"] and g["repo"] != g["title"]
         else ""
     )
+    desc = f'<p class="desc">{e(g["description"])}</p>' if g["description"] else ""
+    links = [link_row("서비스", u, "svc") for u in g["services"]]
+    links += [link_row("Pages", u, "pages") for u in g["pages"]]
+    if g["repo_url"]:
+        links.append(link_row("레포", g["repo_url"], "repo"))
+    body = "\n          ".join(links)
     return f"""      <li class="card">
-        <a class="main" href="{e(item['url'])}">
-          <span class="name">{e(item['name'])}{badge}</span>
-          <span class="host">{e(host)}</span>
-        </a>
+        <div class="head"><span class="name">{e(g['title'])}{badge}</span>{sub}</div>
         {desc}
-        {repo}
+        <div class="links">
+          {body}
+        </div>
       </li>"""
 
 
-def section(title, hint, items, show_repo=True):
-    body = (
-        "\n".join(card(i, show_repo) for i in items)
-        if items
-        else f'      <li class="empty">{html.escape(hint)}</li>'
-    )
-    return f"""  <section>
-    <h2>{html.escape(title)} <span class="count">{len(items)}</span></h2>
-    <ul class="grid">
-{body}
-    </ul>
-  </section>"""
-
-
-def render(services, pages, repos, note):
+def render(groups, counts, note):
     tpl = (ROOT / "templates" / "index.html").read_text(encoding="utf-8")
     now = dt.datetime.now(KST).strftime("%Y-%m-%d %H:%M KST")
-    sections = "\n".join(
-        [
-            section("운영 중인 서비스", "레포 About의 Website 칸이나 hub.yml 의 services 에 주소를 넣으면 여기에 나타납니다.", services),
-            section("GitHub Pages", "GitHub Pages가 켜진 레포가 아직 없습니다.", pages),
-            section("자주 쓰는 레포", "hub.yml 의 repos 에 레포 이름을 넣으면 여기에 나타납니다.", repos, show_repo=False),
-        ]
-    )
+    summary = f"서비스 {counts['services']} · Pages {counts['pages']} · 레포 {len(groups)}"
+    items = "\n".join(card(g) for g in groups) or '      <li class="empty">아직 목록이 비어 있습니다.</li>'
+    sections = f"""  <section>
+    <h2>프로젝트 <span class="count">{html.escape(summary)}</span></h2>
+    <ul class="grid">
+{items}
+    </ul>
+  </section>"""
     return (
         tpl.replace("{{OWNER}}", html.escape(OWNER))
         .replace("{{SECTIONS}}", sections)
@@ -230,9 +264,15 @@ def main():
 
     out = pathlib.Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
-    (out / "index.html").write_text(render(services, pages, fav, note), encoding="utf-8")
+    groups = group_by_repo(services, pages, fav)
+    counts = {"services": len(services), "pages": len(pages)}
+    (out / "index.html").write_text(render(groups, counts, note), encoding="utf-8")
     (out / "data.json").write_text(
-        json.dumps({"services": services, "pages": pages, "repos": fav}, ensure_ascii=False, indent=2),
+        json.dumps(
+            {"groups": groups, "services": services, "pages": pages, "repos": fav},
+            ensure_ascii=False,
+            indent=2,
+        ),
         encoding="utf-8",
     )
     (out / ".nojekyll").write_text("", encoding="utf-8")

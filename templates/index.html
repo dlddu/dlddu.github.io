@@ -36,15 +36,26 @@
     }
     .card {
       background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
-      padding: 16px; display: flex; flex-direction: column; gap: 6px;
+      padding: 16px; display: flex; flex-direction: column; gap: 8px;
     }
-    .card:hover { border-color: var(--accent); }
-    .main { text-decoration: none; color: inherit; display: flex; flex-direction: column; }
+    .head { display: flex; flex-direction: column; }
     .name { font-weight: 600; display: flex; align-items: center; gap: 6px; }
-    .host { font-size: 13px; color: var(--accent); word-break: break-all; }
+    .sub { font-size: 12px; color: var(--muted); }
     .desc { margin: 0; font-size: 14px; color: var(--muted); }
-    .repo { margin-top: auto; padding-top: 4px; font-size: 13px; color: var(--muted); text-decoration: none; }
-    .repo:hover { color: var(--accent); }
+    .links { margin-top: auto; display: flex; flex-direction: column; gap: 4px; }
+    .link {
+      display: flex; align-items: baseline; gap: 8px; text-decoration: none; color: inherit;
+      padding: 6px 8px; margin: 0 -8px; border-radius: 8px;
+    }
+    .link:hover { background: var(--badge); }
+    .kind {
+      flex: none; width: 46px; font-size: 11px; font-weight: 600; letter-spacing: 0.02em;
+      color: var(--muted);
+    }
+    .link.svc .kind { color: var(--accent); }
+    .host { font-size: 13px; word-break: break-all; }
+    .link.svc .host { color: var(--accent); }
+    .link.repo .host { color: var(--muted); }
     .badge {
       font-size: 11px; font-weight: 500; color: var(--muted);
       background: var(--badge); border-radius: 4px; padding: 0 6px;
@@ -58,7 +69,7 @@
 <main>
   <header>
     <h1>{{OWNER}}</h1>
-    <p>운영 중인 서비스와 각 레포의 GitHub Pages 모음</p>
+    <p>운영 중인 서비스, GitHub Pages, 자주 쓰는 레포를 레포 단위로 모았습니다</p>
   </header>
 {{SECTIONS}}
   <footer>
